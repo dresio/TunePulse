@@ -10,10 +10,8 @@
 #include "generic_block.h"
 
 class Voltage_Estimation : public Block {
-  BLOCK_INPUT(int32_t, currentSinRef);    // Measured current sin reference
-  BLOCK_INPUT(int32_t, currentCosRef);    // Measured current cos reference
-  BLOCK_INPUT(int32_t, motorResistance);  // Resistance of motor in ohms
-  BLOCK_INPUT(int32_t, voltageSupply);    // Supply voltage in volts
+  BLOCK_INPUT(int32_t, currentSinRef);  // Measured current sin reference
+  BLOCK_INPUT(int32_t, currentCosRef);  // Measured current cos reference
   BLOCK_OUTPUT(int32_t, voltageSin);  // Output calculated voltage sin reference
   BLOCK_OUTPUT(int32_t, voltageCos);  // Output calculated voltage cos reference
 
@@ -27,18 +25,22 @@ class Voltage_Estimation : public Block {
                      const int32_t& voltageSupply)
       : currentSinRef_(currentSinRef),
         currentCosRef_(currentCosRef),
-        motorResistance_(motorResistance),
-        voltageSupply_(voltageSupply) {}
+        motorResistance(motorResistance),
+        voltageSupply(voltageSupply) {}
 
   /**
    * @brief Updates voltage coltroller calculations
    */
   void tick() override;
+
+ private:
+  int32_t motorResistance;  // Resistance of motor in ohms
+  int32_t voltageSupply;    // Supply voltage in volts
 };
 
 void Voltage_Estimation::tick() {
-  voltageSin_ = currentSinRef_ * motorResistance_;
-  voltageCos_ = currentCosRef_ * motorResistance_;
+  voltageSin_ = currentSinRef_ * motorResistance;
+  voltageCos_ = currentCosRef_ * motorResistance;
 }
 
 #define INIT_VOLTAGE_ESTIMATION(instance_name, currentSinRef, currentCosRef, \
